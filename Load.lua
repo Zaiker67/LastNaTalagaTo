@@ -59,7 +59,7 @@ services.touchParts = function(part, hand, state)
     return pcall(firetouchinterest, part, hand, state)
 end
 
-local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/TryHarderDeobfuscatingHAHAHAlol/ELERIUM-GUI/refs/heads/main/private.elerium.lua" .. tostring(os.time()), true))()
+local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/TryHarderDeobfuscatingHAHAHAlol/ELERIUM-GUI/refs/heads/main/private.elerium.lua", true))()
 local silence = library:AddWindow("M14EBR | Paid Version - Fast Farming", {
     main_color = Color3.fromRGB(138, 0, 0),
     min_size = Vector2.new(500, 560),
