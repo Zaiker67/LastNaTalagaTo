@@ -1,3 +1,84 @@
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local whitelistURL = "https://raw.githubusercontent.com/Zaiker67/WhitelistPaid/refs/heads/main/WhitelistedPlayers-Paid.lua"
+local whitelist = {}
+
+local function isPlayerValid()
+    if type(LocalPlayer.Name) ~= "string" then
+        return false
+    end
+    if LocalPlayer.UserId <= 0 then
+        return false
+    end
+    return true
+end
+
+-- Fetch whitelist
+local function fetchWhitelist()
+    local fetchResult = {
+        pcall(function()
+            return game:HttpGet(whitelistURL)
+        end)
+    }
+
+    if not fetchResult[1] then
+        return false, "WHITELIST_FETCH_FAILED"
+    end
+
+    local whitelistData = fetchResult[2]
+    local loadResult = {
+        pcall(function()
+            return loadstring(whitelistData)()
+        end)
+    }
+
+    if not loadResult[1] or type(loadResult[2]) ~= "table" then
+        return false, "INVALID_WHITELIST_DATA"
+    end
+
+    whitelist = loadResult[2]
+    return true
+end
+
+local fetchSuccess, fetchError = fetchWhitelist()
+if not fetchSuccess then
+    LocalPlayer:Kick(fetchError or "Whitelist fetch failed")
+    return
+end
+
+if not isPlayerValid() then
+    LocalPlayer:Kick("Spoof detected.")
+    return
+end
+
+local function isWhitelisted()
+    local playerName = LocalPlayer.Name
+    if whitelist[playerName] == true then
+        return true
+    end
+    for _, name in ipairs(whitelist) do
+        if name == playerName then
+            return true
+        end
+    end
+    return false
+end
+
+if not isWhitelisted() then
+    LocalPlayer:Kick("Pukinanginamo nagbayad kaba sakin?!")
+    return
+end
+
+-- Runtime spoof detection
+task.spawn(function()
+    while task.wait(3) do
+        if not isPlayerValid() then
+            LocalPlayer:Kick("Spoof detected (runtime).")
+            break
+        end
+    end
+end)
+
 local services = {
     players = game:GetService("Players"),
     replicatedstorage = game:GetService("ReplicatedStorage"),
@@ -61,7 +142,11 @@ end
 
 local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/TryHarderDeobfuscatingHAHAHAlol/libraryvariations/refs/heads/main/Fastfarminglibrary.lua", true))()
 local silence = library:AddWindow("M14EBR | Paid Version - Fast Farming", {
-    main_color = Color3.fromRGB(138, 0, 0),
+    title_bar = {Color3.fromRGB(128, 128, 128), Color3.fromRGB(0, 0, 0), Color3.fromRGB(0, 0, 0)},
+    title_bar_transparency = 0.2,
+    background = {Color3.fromRGB(40, 40, 40), Color3.fromRGB(0, 0, 0), Color3.fromRGB(80, 80, 80)},
+    background_transparency = 0.1,
+    main_color = Color3.fromRGB(128, 128, 128),
     min_size = Vector2.new(500, 560),
     can_resize = false
 })
@@ -614,7 +699,7 @@ tabs.rebirths.rebirths:GetPropertyChangedSignal("Value"):Connect(function()
     tabs.rebirths.updateStats()
 end)
 
-tabs.rebirths.Switch = tabs.rebirths:AddSwitch("Pack Rebirth (Yes, Robux Packs)", function(state)
+tabs.rebirths.Switch = tabs.rebirths:AddSwitch("Fast Rebirth (Packs & Boss Pets Supported)", function(state)
     tabs.rebirths.generation = tabs.rebirths.generation + 1
     tabs.rebirths.running = state
     if state then
@@ -922,7 +1007,7 @@ task.spawn(function()
     end
 end)
 
-tabs.strength:AddLabel("Reaching Average Speed takes some time!")
+tabs.strength:AddLabel("Fast Strength for Boss Pets")
 
 -- Strength Tab (For bad devices)
 
@@ -1152,12 +1237,12 @@ task.spawn(function()
         task.wait(1)
     end
 end)
-tabs.strength2:AddLabel("This Farm is for low end devices, It will be slower then the other one")
-tabs.strength2:AddLabel("For me, 20-40 works the best. Try around!")
+tabs.strength2:AddLabel("This Farm is for those who have Packs")
+tabs.strength2:AddLabel("Recommended Rep Speed: 20-40")
 
 tabs.boss.runtime = {}
 
-tabs.boss:AddLabel("Boss Farming:")
+tabs.boss:AddLabel("Boss Killing")
 tabs.boss.StatusLabel = tabs.boss:AddLabel("Status: Waiting for Boss")
 tabs.boss.BossLabel = tabs.boss:AddLabel("Boss: None")
 tabs.boss.HealthLabel = tabs.boss:AddLabel("Health: 0 / 0")
@@ -1677,7 +1762,7 @@ tabs.boss.collectChest = function(generation, startedAt, chest, prompt, part, ch
 		or os.clock() - startedAt >= 12
 end
 
-tabs.boss.ContinueSwitch = tabs.boss:AddSwitch("Continue Farming after Boss Kill", function(state)
+tabs.boss.ContinueSwitch = tabs.boss:AddSwitch("Continue Grinding after Killing Boss", function(state)
 	tabs.boss.Data.ContinueTraining = state
 	if state and tabs.boss.Data.Phase == "Waiting"
 		and (not tabs.boss.Halloween or not tabs.boss.Halloween.Data.Running) then tabs.boss.resumeTraining() end
@@ -1705,7 +1790,7 @@ task.spawn(function(model, health, maxHealth, hitbox, currentHealth, currentMaxH
 	end
 end)
 
-tabs.boss.AutoFarmSwitch = tabs.boss:AddSwitch("Auto Farm Boss", function(state)
+tabs.boss.AutoFarmSwitch = tabs.boss:AddSwitch("Auto Kill Boss", function(state)
 	if state and tabs.boss.Halloween and tabs.boss.Halloween.Data.Running then
 		tabs.boss.Halloween.AutoFarmSwitch:Set(false)
 	end
@@ -1779,7 +1864,7 @@ end)
 
 tabs.boss:AddLabel("")
 
-tabs.boss:AddLabel("Halloween Boss Farming:")
+tabs.boss:AddLabel("Halloween Boss Killing:")
 tabs.boss.Halloween = {
 	runtime = {},
 	BossLabelPrefix = "Halloween Boss: ",
