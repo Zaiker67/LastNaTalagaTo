@@ -153,8 +153,8 @@ local silence = library:AddWindow("M14EBR | Paid Version - Fast Farming", {
 
 local tabs = {
     rebirths = silence:AddTab("Fast Rebirth"),
-    strength = silence:AddTab("Strength"),
-    strength2 = silence:AddTab("Fast Farm"),
+    strength = silence:AddTab("Fast Strength (Boss Pet)"),
+    strength2 = silence:AddTab("Fast Strength (Packs)"),
     boss = silence:AddTab("Boss"),
     other = silence:AddTab("Other"),
 	other2 = silence:AddTab("MiscV2"),
@@ -1007,7 +1007,7 @@ task.spawn(function()
     end
 end)
 
-tabs.strength:AddLabel("Fast Strength for Boss Pets")
+tabs.strength:AddLabel("Fast Strength (Pwede sa Boss Pets & Pack Pets")
 
 -- Strength Tab (For bad devices)
 
@@ -1237,7 +1237,7 @@ task.spawn(function()
         task.wait(1)
     end
 end)
-tabs.strength2:AddLabel("This Farm is for those who have Packs")
+tabs.strength2:AddLabel("This Fast Strength (Packs) is for those who have Packs")
 tabs.strength2:AddLabel("Recommended Rep Speed: 20-40")
 
 tabs.boss.runtime = {}
@@ -1982,7 +1982,7 @@ task.spawn(function(model)
 	end
 end)
 
-tabs.boss.Halloween.AutoFarmSwitch = tabs.boss:AddSwitch("Auto Farm Halloween Boss", function(state)
+tabs.boss.Halloween.AutoFarmSwitch = tabs.boss:AddSwitch("Auto Kill Halloween Boss", function(state)
 	if state and tabs.boss.Data.Running then tabs.boss.AutoFarmSwitch:Set(false) end
 	tabs.boss.Halloween.Data.Running = state
 	tabs.boss.Halloween.Data.Generation += 1
