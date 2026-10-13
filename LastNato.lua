@@ -1,9 +1,3 @@
---[[
-    Silence - Ml Farming
-    by Henrik @xyzhenrik
-       Muki @mukimagdich
-]]
-
 local services = {
     players = game:GetService("Players"),
     replicatedstorage = game:GetService("ReplicatedStorage"),
@@ -65,35 +59,20 @@ services.touchParts = function(part, hand, state)
     return pcall(firetouchinterest, part, hand, state)
 end
 
-local function greeting(hour)
-    hour = hour or os.date("*t").hour
-    if hour >= 6 and hour < 12 then return "Good Morning!"
-    elseif hour >= 12 and hour < 13 then return "Good Noon!"
-    elseif hour >= 13 and hour < 19 then return "Good Afternoon!"
-    elseif hour >= 19 and hour < 22 then return "Good Evening!"
-    else return "Good Night!" end
-end
-
 local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/silencedevs/SilenceScripts/refs/heads/main/libraries/eleriumv2.luau?cache=" .. tostring(os.time()), true))()
-local silence = library:AddWindow("Silence | Fast Farming - " .. greeting(), {
+local silence = library:AddWindow("M14EBR | Paid Version - Fast Farming - ", {
     main_color = Color3.fromRGB(138, 0, 0),
     min_size = Vector2.new(500, 560),
     can_resize = false
 })
 
-task.spawn(function()
-    while true do
-        task.wait(60)
-        silence:SetTitle("Silence | Fast Farming - " .. greeting())
-    end
-end)
-
 local tabs = {
-    rebirths = silence:AddTab("Rebirths"),
+    rebirths = silence:AddTab("Fast Rebirth"),
     strength = silence:AddTab("Strength"),
-    strength2 = silence:AddTab("Strength (Slower)"),
+    strength2 = silence:AddTab("Fast Farm"),
     boss = silence:AddTab("Boss"),
     other = silence:AddTab("Other"),
+	other2 = silence:AddTab("MiscV2"),
     info = silence:AddTab("Info")
 }
 
@@ -2283,20 +2262,28 @@ tabs.other.tpE = function(position)
     services.virtualinputmanager:SendKeyEvent(false, Enum.KeyCode.E, false, game)
 end
 
-tabs.other:AddButton("Industrial Lift",function()
-    tabs.other.tpE(Vector3.new(-5491.68945, 81.2379913, 4643.85791))
+tabs.other:AddButton("Overcharged Lift",function()
+    tabs.other.tpE(Vector3.new(-3023.363, 151.797, 4696.859))
 end)
 
-tabs.other:AddButton("Industrial Squat",function()
-    tabs.other.tpE(Vector3.new(-5217.25049, 89.8445511, 5416.01025))
+tabs.other:AddButton("Overcharged Squat",function()
+    tabs.other.tpE(Vector3.new(-2673.216, 151.797, 5494.047))
 end)
 
-tabs.other:AddButton("Halloween Lift",function()
-    tabs.other.tpE(Vector3.new(5760.389, 83.206, 6117.898))
+tabs.other:AddButton("Hallowed Lift",function()
+    tabs.other.tpE(Vector3.new(5432.12, 85.35, 5715.02))
 end)
 
-tabs.other:AddButton("Halloween Squat",function()
-    tabs.other.tpE(Vector3.new(4803.357, 83.791, 5827.032))
+tabs.other:AddButton("Hallowed Squat",function()
+    tabs.other.tpE(Vector3.new(4812.03, 85.35, 5839.05))
+end)
+
+tabs.other:AddButton("Hallowed Bench",function()
+    tabs.other.tpE(Vector3.new(5314.69, 142.13, 6807.71))
+end)
+
+tabs.other:AddButton("Hallowed Pullups",function()
+    tabs.other.tpE(Vector3.new(4808.10, 102.34, 6857.22))
 end)
 
 
@@ -2398,6 +2385,105 @@ end)
 
 tabs.other:AddButton("Equip Rep Pets", function()
     equipBestFarmingPets()
+end)
+
+-- Other2 Tab
+
+function unequipPets()
+    for _, folder in pairs(lp.player.petsFolder:GetChildren()) do
+        if folder:IsA("Folder") then
+            for _, pet in pairs(folder:GetChildren()) do
+                services.replicatedstorage.rEvents.equipPetEvent:FireServer("unequipPet", pet)
+            end
+        end
+    end
+    task.wait(0.1)
+end
+
+function equipPetsByName(name)
+    unequipPets()
+    task.wait(0.1) -- Slightly increased to ensure server registers the unequip request
+    
+    -- Iterate through ALL rarity folders (Basic, Advanced, Rare, Unique, Epic, etc.)
+    for _, folder in pairs(lp.player.petsFolder:GetChildren()) do
+        if folder:IsA("Folder") then
+            for _, pet in pairs(folder:GetChildren()) do
+                if pet.Name == name then
+                    services.replicatedstorage.rEvents.equipPetEvent:FireServer("equipPet", pet)
+                end
+            end
+        end
+    end
+end
+
+tabs.other2:AddLabel("Equip Rep Pets")
+
+tabs.other2:AddButton("Common Boss Pet", function()
+    unequipPets()
+    equipPetsByName("Common Boss Pet")
+end)
+
+tabs.other2:AddButton("Rare Boss Pet", function()
+    unequipPets()
+    equipPetsByName("Rare Boss Pet")
+end)
+
+tabs.other2:AddButton("Epic Boss Pet", function()
+    unequipPets()
+    equipPetsByName("Epic Boss Pet")
+end)
+
+tabs.other2:AddButton("Legendary Boss Pet", function()
+    unequipPets()
+    equipPetsByName("Legendary Boss Pet")
+end)
+
+tabs.other2:AddButton("Mythic Boss Pet", function()
+    unequipPets()
+    equipPetsByName("Mythic Boss Pet")
+end)
+
+tabs.other2:AddButton("Rainbow Boss Pet", function()
+    unequipPets()
+    equipPetsByName("Rainbow Boss Pet")
+end)
+
+tabs.other2:AddLabel("~~~~~~~~~~")
+
+tabs.other2:AddLabel("Equip Pack Pets")
+
+tabs.other2:AddButton("Swift Samurai", function()
+    unequipPets()
+    equipPetsByName("Swift Samurai")
+end)
+
+tabs.other2:AddButton("Tribal Overlord", function()
+    unequipPets()
+    equipPetsByName("Tribal Overlord")
+end)
+
+tabs.other2:AddButton("Omega Overlord", function()
+    unequipPets()
+    equipPetsByName("Omega Overlord")
+end)
+
+tabs.other2:AddButton("Titanium Hydra", function()
+    unequipPets()
+    equipPetsByName("Titanium Hydra")
+end)
+
+tabs.other2:AddLabel("~~~~~~~~~~")
+
+tabs.other2:AddLabel("Equip Health & Damage Packs")
+
+tabs.other2:AddButton("Mighty Monster", function()
+    unequipPets()
+    equipPetsByName("Mighty Monster")
+end)
+
+tabs.other2:AddButton("Wild Wizard", function()
+    unequipPets()
+    equipPetsByName("Wild Wizard")
 end)
 
 tabs.info:Show()
