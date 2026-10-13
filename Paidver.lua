@@ -156,7 +156,7 @@ local tabs = {
     strength = silence:AddTab("Fast Strength (Boss Pet)"),
     strength2 = silence:AddTab("Fast Strength (Packs)"),
     boss = silence:AddTab("Boss"),
-    other = silence:AddTab("Other"),
+    other = silence:AddTab("MiscV1"),
 	other2 = silence:AddTab("MiscV2"),
     info = silence:AddTab("Info")
 }
@@ -1007,7 +1007,7 @@ task.spawn(function()
     end
 end)
 
-tabs.strength:AddLabel("Fast Strength (Pwede sa Boss Pets & Pack Pets")
+tabs.strength:AddLabel("Fast Strength (Pwede sa Boss Pets & Pack Pets)")
 
 -- Strength Tab (For bad devices)
 
@@ -2615,48 +2615,47 @@ tabs.other2:AddLabel("~~~~~~~~~~")
 
 tabs.other2:AddLabel("Performance")
 
-tabs.other2:AddButton("Anti Lag", function(state)
-    if state then
-        for _, v in pairs(game:GetDescendants()) do
-            if v:IsA("ParticleEmitter") or v:IsA("Smoke") or v:IsA("Fire") or v:IsA("Sparkles") then
-                v.Enabled = false
-            end
+tabs.other2:AddButton("Anti Lag", function()
+    for _, v in pairs(game:GetDescendants()) do
+        if v:IsA("ParticleEmitter") or v:IsA("Smoke") or v:IsA("Fire") or v:IsA("Sparkles") then
+            v.Enabled = false
         end
-
-        local lighting = game:GetService("Lighting")
-        lighting.GlobalShadows = false
-        lighting.FogEnd = 9e9
-        lighting.Brightness = 0
-
-        settings().Rendering.QualityLevel = 1
-
-        for _, v in pairs(game:GetDescendants()) do
-            if v:IsA("Decal") or v:IsA("Texture") then
-                v.Transparency = 1
-            elseif v:IsA("BasePart") and not v:IsA("MeshPart") then
-                v.Material = Enum.Material.SmoothPlastic
-                if not (v.Parent and (v.Parent:FindFirstChild("Humanoid") or v.Parent.Parent:FindFirstChild("Humanoid"))) then
-                    v.Reflectance = 0
-                end
-            end
-        end
-
-        for _, v in pairs(lighting:GetChildren()) do
-            if v:IsA("BlurEffect") or v:IsA("SunRaysEffect") or v:IsA("ColorCorrectionEffect") or v:IsA("BloomEffect") or v:IsA("DepthOfFieldEffect") then
-                v.Enabled = false
-            end
-        end
-
-        game:GetService("StarterGui"):SetCore("SendNotification", {
-            Title = "Anti Lag",
-            Text = "Anti Lag Applied!",
-            Duration = 3
-        })
     end
+ 
+    local lighting = game:GetService("Lighting")
+    lighting.GlobalShadows = false
+    lighting.FogEnd = 9e9
+    lighting.Brightness = 0
+ 
+    settings().Rendering.QualityLevel = 1
+ 
+    for _, v in pairs(game:GetDescendants()) do
+        if v:IsA("Decal") or v:IsA("Texture") then
+            v.Transparency = 1
+        elseif v:IsA("BasePart") and not v:IsA("MeshPart") then
+            v.Material = Enum.Material.SmoothPlastic
+            if v.Parent and (v.Parent:FindFirstChild("Humanoid") or v.Parent.Parent:FindFirstChild("Humanoid")) then
+            else
+                v.Reflectance = 0
+            end
+        end
+    end
+ 
+    for _, v in pairs(lighting:GetChildren()) do
+        if v:IsA("BlurEffect") or v:IsA("SunRaysEffect") or v:IsA("ColorCorrectionEffect") or v:IsA("BloomEffect") or v:IsA("DepthOfFieldEffect") then
+            v.Enabled = false
+        end
+    end
+ 
+    game:GetService("StarterGui"):SetCore("SendNotification", {
+        Title = "Anti Lag!",
+        Text = "Anti Lag Applied!",
+        Duration = 5
+    })
 end)
 
 tabs.other2:AddButton("Full Optimization", function()
-    tabs.other.playerGui = lp.player:WaitForChild("PlayerGui")
+    tabs.other2.playerGui = lp.player:WaitForChild("PlayerGui")
 
     for _, gui in pairs(tabs.other.playerGui:GetChildren()) do
         if gui:IsA("ScreenGui") then
